@@ -28,6 +28,17 @@ async def read_book(book_title: str):
             return book
 
 
+# query param version
+@app.get("/books/author_books/")
+async def get_author_book_by_query(author_name: str):
+    author_books = []
+    for i in range(len(BOOKS)):
+        if BOOKS[i].get("author").casefold() == author_name.casefold():
+            author_books.append(BOOKS[i])
+
+    return author_books
+
+
 @app.get("/books/")
 async def read_category_by_query(category: str):
     books_to_return = []
@@ -54,3 +65,29 @@ async def read_authot_category_by_query(book_author: str, category: str):
 @app.post("/books/{create_book}")
 async def add_book(new_book=Body()):
     BOOKS.append(new_book)
+
+
+@app.put("/books/{update_book}")
+async def book_update(updated_book=Body()):
+    for i in range(len(BOOKS)):
+        if BOOKS[i].get("title").casefold() == updated_book.get("title").casefold():
+            BOOKS[i] = updated_book
+
+
+@app.delete("/books/delete_book/{book_title}")
+async def remove_book(book_title: str):
+    for i in range(len(BOOKS)):
+        if BOOKS[i].get("title").casefold() == book_title.casefold():
+            BOOKS.pop(i)
+            break
+
+
+# path param version
+@app.get("/books/author_books/{author_name}")
+async def get_author_of_books(author_name: str):
+    author_books = []
+    for i in range(len(BOOKS)):
+        if BOOKS[i].get("author").casefold() == author_name.casefold():
+            author_books.append(BOOKS[i])
+
+    return author_books
